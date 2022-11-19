@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace ForingKey.Models
 {
-    public class Logs
+    public class Logs:BaseClass
     {
-        [Key]
-        public int LogID { get; set; } 
         public string  ExceptionName { get; set; }
-
-        public DateTime DateCreated { get; set; }= DateTime.Now;    
+ 
     }
 }

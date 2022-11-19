@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 namespace ForingKey.Models
 {
    
-    public class Orders
+    public class Orders: BaseClass
     {
-        public string OrderName { get; set; }
         public string Address { get; set; }
-        [Key]
-        public string OrderId { get; set; }
         public string Destination { get; set; }
         public Costumer costumer { get; set; }
         public ICollection<OrderDetails> OrderDetails { get; set; }

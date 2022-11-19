@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 namespace ForingKey.Models
 {
   
-    public class OrderDetails
+    public class OrderDetails: BaseClass
     {
-        [Key]
-        public int DetailId { get; set; }
-        public string Name { get; set; }
-        public DateTime DateCreated { get; set; }
+
         public int Price { get; set; }
         public Orders orderss { get; set; }
     }

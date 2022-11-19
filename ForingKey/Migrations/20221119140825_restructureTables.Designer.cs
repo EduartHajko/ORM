@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForingKey.Migrations
 {
     [DbContext(typeof(CustomerContext))]
-    [Migration("20221119124032_initial")]
-    partial class initial
+    [Migration("20221119140825_restructureTables")]
+    partial class restructureTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,14 +27,20 @@ namespace ForingKey.Migrations
 
             modelBuilder.Entity("ForingKey.Models.Costumer", b =>
                 {
-                    b.Property<int>("CostumerID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CostumerID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -44,20 +50,50 @@ namespace ForingKey.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CostumerID");
+                    b.HasKey("ID");
 
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("ForingKey.Models.OrderDetails", b =>
+            modelBuilder.Entity("ForingKey.Models.Logs", b =>
                 {
-                    b.Property<int>("DetailId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetailId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExceptionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Logs");
+                });
+
+            modelBuilder.Entity("ForingKey.Models.OrderDetails", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -67,39 +103,48 @@ namespace ForingKey.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<string>("orderssOrderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("orderssID")
+                        .HasColumnType("int");
 
-                    b.HasKey("DetailId");
+                    b.HasKey("ID");
 
-                    b.HasIndex("orderssOrderId");
+                    b.HasIndex("orderssID");
 
                     b.ToTable("OrdersDetails");
                 });
 
             modelBuilder.Entity("ForingKey.Models.Orders", b =>
                 {
-                    b.Property<string>("OrderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CostumerID")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Destination")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OrderName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderId");
+                    b.Property<int>("costumerID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CostumerID");
+                    b.HasKey("ID");
+
+                    b.HasIndex("costumerID");
 
                     b.ToTable("Orders");
                 });
@@ -108,7 +153,9 @@ namespace ForingKey.Migrations
                 {
                     b.HasOne("ForingKey.Models.Orders", "orderss")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("orderssOrderId");
+                        .HasForeignKey("orderssID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("orderss");
                 });
@@ -117,7 +164,7 @@ namespace ForingKey.Migrations
                 {
                     b.HasOne("ForingKey.Models.Costumer", "costumer")
                         .WithMany("Orders")
-                        .HasForeignKey("CostumerID")
+                        .HasForeignKey("costumerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
