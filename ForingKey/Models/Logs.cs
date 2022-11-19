@@ -9,7 +9,6 @@ namespace ForingKey.Models
 {
     public class Logs:BaseClass
     {
-        public string  ExceptionName { get; set; }
- 
+   
     }
 }

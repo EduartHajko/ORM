@@ -18,7 +18,7 @@ public class Program
             }
             catch (Exception e)
             {
-                std.ExceptionName = e.Message;
+                std.Name = e.Message;
                 context.Logs.Add(std);
                 context.SaveChanges();
                 Console.WriteLine(e.Message);
